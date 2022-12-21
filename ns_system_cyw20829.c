@@ -174,7 +174,12 @@ void SystemInit_Warmboot_CAT1B_CM33()
 CY_SECTION_RAMFUNC_END
 
 #define CY_NVIC_REG_COUNT 3U
+#define CY_NVIC_IPR_REG_COUNT 69U
+
 uint32_t nvicStoreRestore[CY_NVIC_REG_COUNT];
+uint32_t nvicIPRStoreRestore[CY_NVIC_IPR_REG_COUNT];
+uint32_t scbSHPR3StoreRestore;
+#define SCB_SHPR3_REG     ( *( ( volatile uint32_t * ) 0xe000ed20 ) )
 
 /*******************************************************************************
 * Function Name: System_Store_NVIC_Reg
@@ -189,6 +194,13 @@ void System_Store_NVIC_Reg(void)
     {
         nvicStoreRestore[idx] = NVIC->ISER[idx];
     }
+
+    for (uint32_t idx = 0; idx < CY_NVIC_IPR_REG_COUNT; idx++)
+    {
+        nvicIPRStoreRestore[idx] = NVIC->IPR[idx];
+    }
+
+    scbSHPR3StoreRestore = SCB_SHPR3_REG;
 }
 
 
@@ -205,6 +217,13 @@ void System_Restore_NVIC_Reg(void)
     {
         NVIC->ISER[idx] = nvicStoreRestore[idx];
     }
+
+    for (uint32_t idx = 0; idx < CY_NVIC_IPR_REG_COUNT; idx++)
+    {
+        NVIC->IPR[idx] = nvicIPRStoreRestore[idx];
+    }
+
+    SCB_SHPR3_REG = scbSHPR3StoreRestore;
 }
 void SystemInit(void)
 {
