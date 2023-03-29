@@ -128,6 +128,7 @@ LR_IROM1 (FLASH_START + BOOT_HEADER_SIZE) (FLASH_SIZE - BOOT_HEADER_SIZE)
     RW_IRAM1 +0 UNINIT
     {
         * (.noinit)
+        * (.bss.noinit)
     }
 
     ; Application heap area (HEAP)

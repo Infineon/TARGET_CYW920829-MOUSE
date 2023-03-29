@@ -14,6 +14,8 @@ The CYW920829-MOUSE library includes the following:
 * API documentation
 
 ### What Changed?
+#### v1.0.0 Beta 3
+* Enable configurable bootstrap size in startup code.
 #### v1.0.0 Beta 2
 * Updated to Store and Restore the NVIC registers, while entering and exiting of DEEPSLEEP-RAM.
 #### v1.0.0 Beta 1

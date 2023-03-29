@@ -29,9 +29,7 @@ $(info Processing $(lastword $(MAKEFILE_LIST)))
 endif
 
 # Any additional components to apply when using this board.
-# Use a default CM0+ image (CM0P_SLEEP). This can be swapped for a different
-# pre-built image or removed if custom built project.
-BSP_COMPONENTS:=CM0P_SLEEP FIRMWARE-TX10
+BSP_COMPONENTS:=FIRMWARE-TX10
 
 # Any additional defines to apply when using this board.
 BSP_DEFINES:=CY_USING_HAL
@@ -75,6 +73,7 @@ DEVICE_COMPONENTS:=BTSS-IPC CAT1 CAT1B CYW20829
 DEVICE_CYW20829A0LKML_CORES:=CORE_NAME_CM33_0
 DEVICE_CYW20829A0LKML_DIE:=CYW20829
 DEVICE_CYW20829A0LKML_FLASH_KB:=0
+DEVICE_CYW20829A0LKML_SRAM_KB:=128
 DEVICE_LIST:=CYW20829A0LKML
 DEVICE_TOOL_IDS:=bsp-assistant bt-configurator device-configurator fw-loader library-manager project-creator qspi-configurator smartio-configurator
 RECIPE_DIR:=$(SEARCH_recipe-make-cat1b)

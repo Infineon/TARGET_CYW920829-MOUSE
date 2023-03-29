@@ -27,34 +27,26 @@
 #ifndef STARTUP_CAT1B_H_
 #define STARTUP_CAT1B_H_
 
-#if defined (CY_DEVICE_CYW20829) /* Declarations for CYW20829 */
-
-#include "cyw20829_config.h"
-
 #define CM33_FIXED_EXP_NR       (15u)
 #define VECTORTABLE_SIZE        (MXCM33_SYSTEM_INT_NR + CM33_FIXED_EXP_NR + 1u) /* +1 is for Stack pointer */
 #define VECTORTABLE_ALIGN       (512) /* alignment for 85 entries (85x4=340) is 512 bytes */
 
 #if defined(__ARMCC_VERSION)
-    #define interrupt_type __attribute__((interrupt))
-    typedef void(* ExecFuncPtrRw)(void) interrupt_type;
-    typedef  void(* const ExecFuncPtr)(void) interrupt_type;     /* typedef for the function pointers in the vector table */
+    typedef void(* ExecFuncPtrRw)(void);
+    typedef  void(* const ExecFuncPtr)(void);     /* typedef for the function pointers in the vector table */
     extern ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE] __attribute__( ( section(".bss.noinit.RESET_RAM"))) __attribute__((aligned(VECTORTABLE_ALIGN)));  /**< Non-secure vector table in flash/ROM */
 #elif defined (__GNUC__)
-    #define interrupt_type __attribute__((interrupt))
-    typedef void(* interrupt_type ExecFuncPtrRw)(void);
-    typedef void(* interrupt_type ExecFuncPtr)(void) ;           /* typedef for the function pointers in the vector table */
+    typedef void(* ExecFuncPtrRw)(void);
+    typedef void(* ExecFuncPtr)(void) ;           /* typedef for the function pointers in the vector table */
     extern ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".ram_vectors"))) __attribute__((aligned(VECTORTABLE_ALIGN)));  /**< Non-secure vector table in flash/ROM */
 #elif defined (__ICCARM__)
-    #define interrupt_type __irq
-    typedef interrupt_type void(* ExecFuncPtrRw)(void) ;
-    typedef interrupt_type void(* const ExecFuncPtr)(void) ;     /* typedef for the function pointers in the vector table */
+    typedef void(* ExecFuncPtrRw)(void) ;
+    typedef void(* const ExecFuncPtr)(void) ;     /* typedef for the function pointers in the vector table */
     extern ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".intvec_ram"))) __attribute__((aligned(VECTORTABLE_ALIGN)));  /**< Non-secure vector table in flash/ROM */
 #else
     #error "An unsupported toolchain"
 #endif  /* (__ARMCC_VERSION) */
 extern ExecFuncPtr __ns_vector_table[]; /**< Non-secure vector table in non-secure SRAM */
-#endif /* CY_DEVICE_CYW20829 */
 
 #endif /* STARTUP_CAT1B_H_ */
 

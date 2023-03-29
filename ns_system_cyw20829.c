@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file ns_system_cyw20829.c
-* \version 1.2
+* \version 1.3
 *
 * The device system-source file.
 *
@@ -34,13 +34,13 @@
 #include "cy_syspm.h"
 
 CY_MISRA_DEVIATE_BLOCK_START('ARRAY_VS_SINGLETON', 1, \
-'Checked manually. Using pointer as an array will not corrupt or misinterpret adjacent memory locations.');
+'Checked manually. Using pointer as an array will not corrupt or misinterpret adjacent memory locations.')
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 18.1', 1, \
-'Checked manually. Dereferencing a pointer to one beyond the end of an array will not result in undefined behaviour.');
+'Checked manually. Dereferencing a pointer to one beyond the end of an array will not result in undefined behaviour.')
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 18.3', 1, \
-'Checked manually. Attempting to make comparisons between pointers will not result in undefined behaviour.');
+'Checked manually. Attempting to make comparisons between pointers will not result in undefined behaviour.')
 CY_MISRA_FP_BLOCK_START('MISRA C-2012 Rule 8.6', 2, \
-'Checked manually. The definition is a part of linker script or application.');
+'Checked manually. The definition is a part of linker script or application.')
 
 /*******************************************************************************
 * SystemCoreClockUpdate()
@@ -114,9 +114,10 @@ void bootstrapInit(void)
 
 void SystemInit_CAT1B_CM33(void)
 {
-    /* Release reset for all groups IP except group 0 */
+    /* Release reset for all groups IP except group 0 and group 3 */
     (void)Cy_SysClk_PeriGroupSetSlaveCtl(1, CY_SYSCLK_PERI_GROUP_SL_CTL2, 0x0U); /* typecast void to suppress a compiler warning about unused return value */
     (void)Cy_SysClk_PeriGroupSetSlaveCtl(2, CY_SYSCLK_PERI_GROUP_SL_CTL2, 0x0U); /* typecast void to suppress a compiler warning about unused return value */
+    (void)Cy_SysClk_PeriGroupSetSlaveCtl(3, CY_SYSCLK_PERI_GROUP_SL_CTL2, 0x1U); /* typecast void to suppress a compiler warning about unused return value */
 
     (void)Cy_SysClk_PeriGroupSetSlaveCtl(1, CY_SYSCLK_PERI_GROUP_SL_CTL, 0xFFFFFFFFU); /* typecast void to suppress a compiler warning about unused return value */
     (void)Cy_SysClk_PeriGroupSetSlaveCtl(2, CY_SYSCLK_PERI_GROUP_SL_CTL, 0xFFFFFFFFU); /* typecast void to suppress a compiler warning about unused return value */
@@ -124,20 +125,6 @@ void SystemInit_CAT1B_CM33(void)
 
     Cy_PDL_Init(CY_DEVICE_CFG);
     (void)Cy_SystemInit(); /* typecast void to suppress a compiler warning about unused return value */
-
-    if(CY_SYSPM_WARM_BOOT_MODE == Cy_SysPm_GetBootMode())
-    {
-        /* Unfreeze the IO's which are frozen during DEEPSLEEP-RAM and DEEPSLEEP-OFF Entry */
-        if(Cy_SysPm_DeepSleepIoIsFrozen())
-        {
-            Cy_SysPm_DeepSleepIoUnfreeze();
-        }
-    }
-    else
-    {
-        /* Reset BT IP only during cold boot */
-        (void)Cy_SysClk_PeriGroupSetSlaveCtl(3, CY_SYSCLK_PERI_GROUP_SL_CTL2, 0x0U); /* typecast void to suppress a compiler warning about unused return value */
-    }
 
     /* Unlock and disable WDT */
     Cy_WDT_Unlock();
@@ -170,6 +157,8 @@ void SystemInit_Warmboot_CAT1B_CM33()
     {
         Cy_SysPm_DeepSleepIoUnfreeze();
     }
+
+    cy_WakeupFromWarmBootStatus = true;
 }
 CY_SECTION_RAMFUNC_END
 
@@ -281,10 +270,10 @@ void SystemCoreClockUpdate (void)
     cy_AhbFreqHz = Cy_SysClk_ClkHfGetFrequency(0UL);
 }
 
-CY_MISRA_BLOCK_END('MISRA C-2012 Rule 8.6');
-CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.3');
-CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.1');
-CY_MISRA_BLOCK_END('ARRAY_VS_SINGLETON');
+CY_MISRA_BLOCK_END('MISRA C-2012 Rule 8.6')
+CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.3')
+CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.1')
+CY_MISRA_BLOCK_END('ARRAY_VS_SINGLETON')
 
 #endif /* defined (CY_DEVICE_CYW20829) */
 /* [] END OF FILE */

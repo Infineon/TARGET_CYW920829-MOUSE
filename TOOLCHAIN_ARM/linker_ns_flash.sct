@@ -45,26 +45,27 @@
 #define ram_start_addr_cbus 0x04000000
 #define ram_end_addr_sahb 0x20020000
 
-#define app_code_offset_flash 0x00002600
-#define bootstrap_offset_ram 0x0001DC00
+#ifndef APP_BOOTSTRAP_SIZE
+#define APP_BOOTSTRAP_SIZE 0x00002400
+#endif
+#define BOOTSTRAP_SIZE APP_BOOTSTRAP_SIZE
+
+#define FLASH_ALIGNMENT_SIZE 0x00000200
 
 ; The size of the stack section at the end of CM33 SRAM
 #define STACK_SIZE              0x00001000
 
 
 /* VMA for bootstrap Text */
-#define bootstrapText_vma ram_start_addr_cbus + bootstrap_offset_ram /* 0x0401E000 */
+#define bootstrapText_vma ram_start_addr_cbus + ram_end_addr_sahb - ram_start_addr_sahb - BOOTSTRAP_SIZE /* 0x0401DC00 */
 /* Size of bootstrap section */
-#define bootstrapText_size 0x00002400
+#define bootstrapText_size BOOTSTRAP_SIZE
 
 /* VMA for bootstrap Data */
 #define bootstrapRamVect_vma ram_start_addr_sahb + STACK_SIZE /* 0x20001000 */
 
 /* VMA for flash */
-#define appText_vma flash_start_addr_cbus + app_code_offset_flash /* 0x08002200 */
-
-/* Memory reserved for Bootstrap code and data */
-#define BOOTSTRAP_SIZE ram_end_addr_sahb - ram_start_addr_sahb - bootstrap_offset_ram; /* 0x00002000 */
+#define appText_vma flash_start_addr_cbus + BOOTSTRAP_SIZE + FLASH_ALIGNMENT_SIZE /* 0x08002600 */
 
 ; Cortex-M33 application flash area
 LR_1 bootstrapText_vma BOOTSTRAP_SIZE
@@ -144,10 +145,11 @@ LR_2 appText_vma
     appData_noinit +0 UNINIT
     {
         * (.noinit)
+        * (.bss.noinit)
     }
 
     ; Application heap area (HEAP)
-    ARM_LIB_HEAP  +0 ALIGN 8 EMPTY ((ram_start_addr_sahb + bootstrap_offset_ram)-AlignExpr(ImageLimit(appData_noinit), 8))
+    ARM_LIB_HEAP  +0 ALIGN 8 EMPTY ((ram_end_addr_sahb - BOOTSTRAP_SIZE)-AlignExpr(ImageLimit(appData_noinit), 8))
     {
     }
 

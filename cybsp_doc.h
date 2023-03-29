@@ -23,8 +23,8 @@
 #if defined(CY_USING_HAL)
 #include "cyhal_pin_package.h"
 #endif
-/* CAT4 and CAT5 do not have configurators so the BSP defines pins in a non-generated header */
-#if defined(COMPONENT_CAT4) || defined(COMPONENT_CAT5)
+/* CAT4 does not have configurators so the BSP defines pins in a non-generated header */
+#if defined(COMPONENT_CAT4)
 #include "cybsp_pins.h"
 #else
 #include "cycfg.h"

@@ -1,6 +1,6 @@
 /***************************************************************************//**
 * \file ns_start_cyw20829.c
-* \version 1.1
+* \version 1.2
 *
 * The cyw20829 startup source.
 *
@@ -37,13 +37,13 @@
 #include "cmsis_compiler.h"
 
 CY_MISRA_FP_BLOCK_START('MISRA C-2012 Rule 8.6', 3, \
-'Checked manually. The definition is a part of linker script or application.');
+'Checked manually. The definition is a part of linker script or application.')
 CY_MISRA_DEVIATE_BLOCK_START('ARRAY_VS_SINGLETON', 1, \
-'Checked manually. Using pointer as an array will not corrupt or misinterpret adjacent memory locations.');
+'Checked manually. Using pointer as an array will not corrupt or misinterpret adjacent memory locations.')
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 18.1', 3, \
-'Checked manually. Dereferencing a pointer to one beyond the end of an array will not result in undefined behaviour.');
+'Checked manually. Dereferencing a pointer to one beyond the end of an array will not result in undefined behaviour.')
 CY_MISRA_DEVIATE_BLOCK_START('MISRA C-2012 Rule 18.3', 1, \
-'Checked manually. Attempting to make comparisons between pointers will not result in undefined behaviour.');
+'Checked manually. Attempting to make comparisons between pointers will not result in undefined behaviour.')
 
 #if defined (__ARMCC_VERSION)
 extern uint32_t Region$$Table$$Base;
@@ -51,17 +51,17 @@ extern uint32_t Region$$Table$$Limit;
 typedef  void(*pGenericFunction)(uint8_t *pSrc, uint8_t* pDst, uint32_t len);     /* typedef for the generic function pointers */
 #endif
 
-__WEAK interrupt_type void Reset_Handler(void);
-interrupt_type void MemManage_Handler(void);
-interrupt_type void BusFault_Handler(void);
-interrupt_type void UsageFault_Handler(void);
-__WEAK interrupt_type void SVC_Handler(void);
-interrupt_type void DebugMon_Handler(void);
-__WEAK interrupt_type void PendSV_Handler(void);
-__WEAK interrupt_type void SysTick_Handler(void);
-interrupt_type void InterruptHandler(void);
-interrupt_type void NMIException_Handler(void);
-interrupt_type void HardFault_Handler(void);
+__WEAK void Reset_Handler(void);
+void MemManage_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+__WEAK void SVC_Handler(void);
+void DebugMon_Handler(void);
+__WEAK void PendSV_Handler(void);
+__WEAK void SysTick_Handler(void);
+void InterruptHandler(void);
+void NMIException_Handler(void);
+void HardFault_Handler(void);
 void delay_infinite(void);
 void SysLib_FaultHandler(uint32_t const *faultStackAddr);
 __WEAK void cy_toolchain_init(void);
@@ -76,17 +76,16 @@ void Cy_RuntimeInit(void);
 
 #if defined(__ARMCC_VERSION)
 extern unsigned int Image$$ARM_LIB_STACK$$ZI$$Limit;            /* for (default) One Region model */
-interrupt_type extern void __main(void);
-typedef void(* ExecFuncPtrRw)(void) interrupt_type;
+extern void __main(void);
 ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE] __attribute__( ( section(".bss.noinit.RESET_RAM"))) __attribute__((aligned(VECTORTABLE_ALIGN)));
 #elif defined (__GNUC__)
 extern unsigned int __StackTop;
 extern uint32_t __StackLimit;
-typedef void(* interrupt_type ExecFuncPtrRw)(void);
+typedef void(* ExecFuncPtrRw)(void);
 ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".ram_vectors"))) __attribute__((aligned(VECTORTABLE_ALIGN)));
 #elif defined (__ICCARM__)
 extern unsigned int CSTACK$$Limit;                      /* for (default) One Region model */
-interrupt_type extern void  __cmain();
+extern void  __cmain();
 ExecFuncPtrRw __ns_vector_table_rw[VECTORTABLE_SIZE]   __attribute__( ( section(".intvec_ram"))) __attribute__((aligned(VECTORTABLE_ALIGN)));
 #else
     #error "An unsupported toolchain"
@@ -99,7 +98,7 @@ void SysLib_FaultHandler(uint32_t const *faultStackAddr)
 
 // Exception Vector Table & Handlers
 //----------------------------------------------------------------
-interrupt_type void NMIException_Handler(void)
+void NMIException_Handler(void)
 {
     __asm volatile(
         "bkpt #10\n"
@@ -107,7 +106,7 @@ interrupt_type void NMIException_Handler(void)
     );
 }
 
-interrupt_type void HardFault_Handler(void)
+void HardFault_Handler(void)
 {
     __asm (
         "MRS R0, CONTROL\n"
@@ -119,15 +118,15 @@ interrupt_type void HardFault_Handler(void)
     );
 }
 
-interrupt_type void MemManage_Handler(void)        {while(true){}}
-interrupt_type void BusFault_Handler(void)    {while(true){}}
-interrupt_type void UsageFault_Handler(void)    {while(true){}}
-__WEAK interrupt_type void SVC_Handler(void)    {while(true){}}
-interrupt_type void DebugMon_Handler(void)       {while(true){}}
-__WEAK interrupt_type void PendSV_Handler(void)      {while(true){}}
-__WEAK interrupt_type void SysTick_Handler(void)    {while(true){}}
+void MemManage_Handler(void)        {while(true){}}
+void BusFault_Handler(void)    {while(true){}}
+void UsageFault_Handler(void)    {while(true){}}
+__WEAK void SVC_Handler(void)    {while(true){}}
+void DebugMon_Handler(void)       {while(true){}}
+__WEAK void PendSV_Handler(void)      {while(true){}}
+__WEAK void SysTick_Handler(void)    {while(true){}}
 
-interrupt_type void InterruptHandler(void)
+void InterruptHandler(void)
 {
     __asm volatile(
         "bkpt #1\n"
@@ -435,7 +434,7 @@ int __low_level_init(void)
 
 
 // Reset Handler
-__WEAK interrupt_type void Reset_Handler(void)
+__WEAK void Reset_Handler(void)
 {
     /* Disable I cache */
     ICACHE0->CTL = ICACHE0->CTL & (~ICACHE_CTL_CA_EN_Msk);
@@ -477,9 +476,9 @@ __WEAK interrupt_type void Reset_Handler(void)
    __PROGRAM_START();
 }
 
-CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.3');
-CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.1');
-CY_MISRA_BLOCK_END('ARRAY_VS_SINGLETON');
-CY_MISRA_BLOCK_END('MISRA C-2012 Rule 8.6');
+CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.3')
+CY_MISRA_BLOCK_END('MISRA C-2012 Rule 18.1')
+CY_MISRA_BLOCK_END('ARRAY_VS_SINGLETON')
+CY_MISRA_BLOCK_END('MISRA C-2012 Rule 8.6')
 
 #endif /* defined (CY_DEVICE_CYW20829) */
