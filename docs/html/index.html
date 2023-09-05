@@ -89,7 +89,7 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="textblock"><p ><a class="anchor" id="md_output_bsps_TARGET_CYW920829_MOUSE_README"></a> </p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Overview</h1>
-<p >The AIROC™ CYW20829 mouse reference solution is an ultra-low power mouse design with multi-device support that demonstrates Bluetooth® LE HID over GATT profile It comes with the right combination of low power and high performance dual core Arm® Cortex® M33 to meet the demands of battery powered mouse.</p>
+<p >The AIROC™ CYW20829 mouse reference solution is an ultra-low power mouse design with multi-host support that demonstrates Bluetooth® LE HID over GATT profile It comes with the right combination of low power and high performance dual core Arm® Cortex® M33 to meet the demands of battery powered mouse.</p>
 <p >To use code from the BSP, simply include a reference to <code>cybsp.h</code>.</p>
 <h1><a class="anchor" id="autotoc_md2"></a>
 Features</h1>
@@ -97,22 +97,16 @@ Features</h1>
 Kit Features:</h2>
 <ul>
 <li>32-bit CPU subsystem with Arm® Cortex® M33</li>
-<li>128-KB SRAM with power and data retention control</li>
+<li>256-KB SRAM with power and data retention control</li>
 <li>Low power 2.1 - 3.0 V operation</li>
-<li>Bluetooth® LE subsystem with 2.4GHz RF transceiver, Digital PHY and Programmable TX power</li>
+<li>Bluetooth® LE 5.4 core spec-compliant</li>
 <li>Battery voltage measurement with 16 bit ADC</li>
 <li>5-pin SWD connectors</li>
 <li>Left, Right, Middle and DPI buttons</li>
 <li>SPI based optical motion sensor</li>
 <li>F-switch Quadrature Encoder for scroll wheel</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
-Kit Contents:</h2>
-<ul>
-<li>CYW20829-MOUSE reference kit</li>
-<li>Kit Quick Start Guide</li>
-</ul>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 BSP Configuration</h1>
 <p >The BSP has a few hooks that allow its behavior to be configured. Some of these items are enabled by default while others must be explicitly enabled. Items enabled by default are specified in the CYW920829-MOUSE.mk file. The items that are enabled can be changed by creating a custom BSP or by editing the application makefile.</p>
 <p >Components:</p><ul>
@@ -123,7 +117,7 @@ BSP Configuration</h1>
 <li>CY_USING_HAL - This define, enabled by default, specifies that the HAL is intended to be used by the application. This will cause the BSP to include the applicable header file and to initialize the system level drivers.</li>
 <li>CYBSP_CUSTOM_SYSCLK_PM_CALLBACK - This define, disabled by default, causes the BSP to skip registering its default SysClk Power Management callback, if any, and instead to invoke the application-defined function <code>cybsp_register_custom_sysclk_pm_callback</code> to register an application-specific callback.</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Clock Configuration</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -137,7 +131,7 @@ Clock Configuration</h2>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">CLK_HF3   </td><td class="markdownTableBodyNone">CLK_PATH0   </td><td class="markdownTableBodyNone">24 MHz   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md7"></a>
+<h2><a class="anchor" id="autotoc_md6"></a>
 Power Configuration</h2>
 <ul>
 <li>System Active Power Mode: ULP</li>
@@ -146,11 +140,11 @@ Power Configuration</h2>
 <li>VDDD Voltage: 3300 mV</li>
 </ul>
 <p >See the <a href="md_bsp_settings.html">BSP Setttings</a> for additional board specific configuration settings.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 API Reference Manual</h1>
 <p >The CYW920829-MOUSE Board Support Package provides a set of APIs to configure, initialize and use the board resources.</p>
 <p >See the <a href="modules.html">BSP API Reference Manual</a> for the complete list of the provided interfaces.</p>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 More information</h1>
 <ul>
 <li><a href="modules.html">CYW920829-MOUSE BSP API Reference Manual</a></li>

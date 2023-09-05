@@ -1,5 +1,5 @@
 /***************************************************************************//**
-* \file ns_system_cyw20829.c
+* \file system_cyw20829.c
 * \version 1.3
 *
 * The device system-source file.
@@ -26,8 +26,9 @@
 #include "cy_device.h"
 
 #if defined (CY_DEVICE_CYW20829)
+
 #include <stdbool.h>
-#include "system_cyw20829.h"
+#include "system_cat1b.h"
 #include "cy_syslib.h"
 #include "cy_wdt.h"
 #include "cy_sysclk.h"
@@ -221,6 +222,13 @@ CY_SECTION_RAMFUNC_END
 
 void SystemInit(void)
 {
+
+    #ifdef CY_PDL_FLASH_BOOT
+    #if !defined (__ARMCC_VERSION)
+        bootstrapInit();
+    #endif
+    #endif
+
     SystemInit_CAT1B_CM33();
 };
 

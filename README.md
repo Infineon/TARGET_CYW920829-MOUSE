@@ -2,7 +2,7 @@
 
 ## Overview
 
-The AIROC™ CYW20829 mouse reference solution is an ultra-low power mouse design with multi-device support that demonstrates Bluetooth® LE HID over GATT profile It comes with the right combination of low power and high performance dual core Arm® Cortex® M33 to meet the demands of battery powered mouse.
+The AIROC™ CYW20829 mouse reference solution is an ultra-low power mouse design with multi-host support that demonstrates Bluetooth® LE HID over GATT profile It comes with the right combination of low power and high performance dual core Arm® Cortex® M33 to meet the demands of battery powered mouse.
 
 
 
@@ -13,19 +13,14 @@ To use code from the BSP, simply include a reference to `cybsp.h`.
 ### Kit Features:
 
 * 32-bit CPU subsystem with Arm® Cortex® M33
-* 128-KB SRAM with power and data retention control
+* 256-KB SRAM with power and data retention control
 * Low power 2.1 - 3.0 V operation
-* Bluetooth® LE subsystem with 2.4GHz RF transceiver, Digital PHY and Programmable TX power
+* Bluetooth® LE 5.4 core spec-compliant
 * Battery voltage measurement with 16 bit ADC
 * 5-pin SWD connectors
 * Left, Right, Middle and DPI buttons
 * SPI based optical motion sensor
 * F-switch Quadrature Encoder for scroll wheel
-
-### Kit Contents:
-
-* CYW20829-MOUSE reference kit
-* Kit Quick Start Guide
 
 ## BSP Configuration
 

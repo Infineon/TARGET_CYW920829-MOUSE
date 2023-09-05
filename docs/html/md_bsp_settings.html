@@ -96,11 +96,11 @@ $(document).ready(function(){initNavTree('md_bsp_settings.html',''); initResizab
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">Baud rate   </td><td class="markdownTableBodyCenter">115200   </td><td class="markdownTableBodyLeft"></td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md16"></a>
+<h1><a class="anchor" id="autotoc_md15"></a>
 Security Provisioning Settings</h1>
 <p >This board supports enhanced security features which can be configured as part of development. For details about exactly what is available and how to use it, see the <a href="https://www.cypress.com/documentation/software-and-drivers/psoc-64-secure-mcu-secure-boot-sdk-user-guide">Secure Boot SDK User Guide</a>. Configuring these settings makes use of the <a href="https://pypi.org/project/cysecuretools/">CySecureTools</a> Python package. CYW20829 specific details are available in the <a href="https://github.com/infineon/cysecuretools/">README_CYW20829.md</a> file.</p>
 <p >When using CySecureTools to initialize the application, it will generate json files for each possible mode. Some of those modes require information about how to access external memory if it is available. These settings are specific to the external memory attached to your board. For this board, the following settings should be used. Note, a description of what each of the settings means is provided at the end.</p>
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 CYW920829-MOUSE Specific External Memory Provisioning Settings</h2>
 <pre class="fragment">    "smif_config":
     {
@@ -130,7 +130,7 @@ CYW920829-MOUSE Specific External Memory Provisioning Settings</h2>
             "value": "4-byte"
         }
     },
-</pre> <h2><a class="anchor" id="autotoc_md18"></a>
+</pre> <h2><a class="anchor" id="autotoc_md17"></a>
 Getting Started</h2>
 <p >To get started with the no secure policy, the following commands can be run:<br  />
  $ cysecuretools set-ocd &ndash;name openocd &ndash;path &lt;Path to ModusToolbox™ tools install&gt;/openocd<br  />
@@ -139,9 +139,9 @@ Getting Started</h2>
  $ cysecuretools -t cyw20829 -p policy/policy_no_secure.json provision-device<br  />
  $ cysecuretools -t cyw20829 -p policy/policy_reprovisioning_no_secure.json reprovision-device<br  />
 </p>
-<h2><a class="anchor" id="autotoc_md19"></a>
+<h2><a class="anchor" id="autotoc_md18"></a>
 External Memory Provisioning Settings</h2>
-<h3><a class="anchor" id="autotoc_md20"></a>
+<h3><a class="anchor" id="autotoc_md19"></a>
 smif_configuration:</h3>
 <p >This defines how information about the memory is discovered.<br  />
  Valid options are:</p><ul>
@@ -154,14 +154,14 @@ smif_configuration:</h3>
 <li>"QER_6" - Use standard SFDP with Quad Enable Requirements 6.</li>
 <li>"Non-SFDP" - SFDP is not available. Custom memory support is needed.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md21"></a>
+<h3><a class="anchor" id="autotoc_md20"></a>
 chip_select:</h3>
 <p >This specifies which chip select signal is used to talk to the external memory.<br  />
  Valid options are:</p><ul>
 <li>"CS0" - ChipSelect pin 0 is used to select the device.</li>
 <li>"CS1" - ChipSelect pin 1 is used to select the device.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md22"></a>
+<h3><a class="anchor" id="autotoc_md21"></a>
 data_width:</h3>
 <p >This defines the number of data pins which are used simultaneously to transfer data to/from the device.<br  />
  Valid options are:</p><ul>
@@ -170,7 +170,7 @@ data_width:</h3>
 <li>"4X" - 4 IO pins are used for communication.</li>
 <li>"8X" - 8 IO pins are used for communication.</li>
 </ul>
-<h3><a class="anchor" id="autotoc_md23"></a>
+<h3><a class="anchor" id="autotoc_md22"></a>
 data_select:</h3>
 <p >This setting controls which specific data pins are used for communication with the external memory device.<br  />
  Valid options are: </p><table class="markdownTable">
@@ -197,7 +197,7 @@ data_select:</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">data[7]=SO   </td><td class="markdownTableBodyCenter">data[7]=IO1   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md24"></a>
+<h3><a class="anchor" id="autotoc_md23"></a>
 addressing_mode:</h3>
 <p >This defines the number of bytes used to specify addresses when communicating with the external memory.<br  />
  Valid options are:</p><ul>
