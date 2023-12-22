@@ -53,6 +53,8 @@ void cybsp_syspm_do_warmboot(void);
 cy_rslt_t cybsp_syspm_dsram_init(void);
 
 
+extern cy_stc_syspm_warmboot_entrypoint_t syspmBspDeepSleepEntryPoint; ///< DS entry point
+
 /** \} group_bsp_dsram_functions */
 
 #ifdef __cplusplus

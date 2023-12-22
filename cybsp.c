@@ -26,6 +26,7 @@
 *******************************************************************************/
 
 #include <stdlib.h>
+#include "cybsp_pm.h"
 #include "cy_syspm.h"
 #include "cy_sysclk.h"
 #include "cybsp.h"
@@ -34,54 +35,11 @@
 #include "cyhal_syspm.h"
 #endif
 #include "cybsp_dsram.h"
+#include "cycfg_qspi_memslot.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
-
-// The sysclk deep sleep callback is recommended to be the last callback that is executed before
-// entry into deep sleep mode and the first one upon exit the deep sleep mode.
-// Doing so minimizes the time spent on low power mode entry and exit.
-#ifndef CYBSP_SYSCLK_PM_CALLBACK_ORDER
-    #define CYBSP_SYSCLK_PM_CALLBACK_ORDER  (255u)
-#endif
-
-
-
-#if !defined(CYBSP_CUSTOM_SYSCLK_PM_CALLBACK)
-//--------------------------------------------------------------------------------------------------
-// cybsp_register_sysclk_pm_callback
-//
-// Registers a power management callback that prepares the clock system for entering deep sleep mode
-// and restore the clocks upon wakeup from deep sleep.
-// NOTE: This is called automatically as part of \ref cybsp_init
-//--------------------------------------------------------------------------------------------------
-static cy_rslt_t cybsp_register_sysclk_pm_callback(void)
-{
-    cy_rslt_t                             result                         = CY_RSLT_SUCCESS;
-    static cy_stc_syspm_callback_params_t cybsp_sysclk_pm_callback_param = { NULL, NULL };
-    static cy_stc_syspm_callback_t        cybsp_sysclk_pm_callback       =
-    {
-        .callback       = &Cy_SysClk_DeepSleepCallback,
-        #if (CY_CFG_PWR_SYS_IDLE_MODE == CY_CFG_PWR_MODE_DEEPSLEEP_RAM)
-        .type           = (cy_en_syspm_callback_type_t)CY_SYSPM_MODE_DEEPSLEEP_RAM,
-        #else
-        .type           = (cy_en_syspm_callback_type_t)CY_SYSPM_MODE_DEEPSLEEP,
-        #endif
-        .callbackParams = &cybsp_sysclk_pm_callback_param,
-        .order          = CYBSP_SYSCLK_PM_CALLBACK_ORDER
-    };
-
-    if (!Cy_SysPm_RegisterCallback(&cybsp_sysclk_pm_callback))
-    {
-        result = CYBSP_RSLT_ERR_SYSCLK_PM_CALLBACK;
-    }
-    return result;
-}
-
-
-#endif // if !defined(CYBSP_CUSTOM_SYSCLK_PM_CALLBACK)
-
 
 //--------------------------------------------------------------------------------------------------
 // cybsp_init
@@ -115,14 +73,17 @@ cy_rslt_t cybsp_init(void)
     {
         #if defined(CYBSP_CUSTOM_SYSCLK_PM_CALLBACK)
         result = cybsp_register_custom_sysclk_pm_callback();
-        #else
-        result = cybsp_register_sysclk_pm_callback();
         #endif
     }
 
     if (CY_RSLT_SUCCESS == result)
     {
         result = cybsp_syspm_dsram_init();
+    }
+
+    if (CY_RSLT_SUCCESS == result)
+    {
+        result = cybsp_pm_callbacks_register();
     }
 
     // CYHAL_HWMGR_RSLT_ERR_INUSE result could be returned if any resourced needed for the BSP was

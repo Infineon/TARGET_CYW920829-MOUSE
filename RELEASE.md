@@ -1,5 +1,5 @@
 ### CYW920829-MOUSE BSP
-The AIROC™ CYW20829 Bluetooth® LE SoC is a Bluetooth® 5.3 core spec-compliant for IoT, HID, smart home and industrial applications. It comes with the right combination of low power and high performance dual core Arm® Cortex® M33 to meet the high demands of Bluetooth® LE Applications.
+The AIROC™ CYW20829 mouse reference solution is an ultra-low power mouse design with multi-host support that demonstrates Bluetooth® LE HID over GATT profile It comes with the right combination of low power and high performance dual core Arm® Cortex® M33 to meet the demands of battery powered mouse.
 
 NOTE: BSPs are versioned by family. This means that version 1.2.0 of any BSP in a family (eg: PSoC™ 6) will have the same software maturity level. However, not all updates are necessarily applicable for each BSP in the family so not all version numbers will exist for each board. Additionally, new BSPs may not start at version 1.0.0. In the event of adding a common feature across all BSPs, the libraries are assigned the same version number. For example if BSP_A is at v1.3.0 and BSP_B is at v1.2.0, the event will trigger a version update to v1.4.0 for both BSP_A and BSP_B. This allows the common feature to be tracked in a consistent way.
 
@@ -14,13 +14,8 @@ The CYW920829-MOUSE library includes the following:
 * API documentation
 
 ### What Changed?
-#### v1.0.0 Beta 3
-* Enable configurable bootstrap size in startup code.
-#### v1.0.0 Beta 2
-* Updated to Store and Restore the NVIC registers, while entering and exiting of DEEPSLEEP-RAM.
-#### v1.0.0 Beta 1
-Note: This revision is only compatible with ModusToolbox Tools 3.0 and newer.
-* Updated pre-production release supporting ModusToolbox 3.0.
+#### v1.0.1
+* Initial production release 
 #### v0.5.0
 * Initial pre-production release
 
@@ -29,8 +24,8 @@ This version of the CYW920829-MOUSE BSP was validated for compatibility with the
 
 | Software and Tools                        | Version |
 | :---                                      | :----:  |
-| ModusToolbox™ Software Environment        | 3.0.0   |
-| GCC Compiler                              | 10.3.1  |
+| ModusToolbox™ Software Environment        | 3.1.0   |
+| GCC Compiler                              | 11.3.1  |
 | IAR Compiler                              | 9.30.1  |
 | ARM Compiler                              | 6.16    |
 

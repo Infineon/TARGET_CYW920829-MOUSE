@@ -27,15 +27,14 @@ var NAVTREE =
   [ "CYW920829-MOUSE BSP", "index.html", [
     [ "Overview", "index.html#autotoc_md1", null ],
     [ "Features", "index.html#autotoc_md2", [
-      [ "Kit Features:", "index.html#autotoc_md3", null ],
-      [ "Kit Contents:", "index.html#autotoc_md4", null ]
+      [ "Kit Features:", "index.html#autotoc_md3", null ]
     ] ],
-    [ "BSP Configuration", "index.html#autotoc_md5", [
-      [ "Clock Configuration", "index.html#autotoc_md6", null ],
-      [ "Power Configuration", "index.html#autotoc_md7", null ]
+    [ "BSP Configuration", "index.html#autotoc_md4", [
+      [ "Clock Configuration", "index.html#autotoc_md5", null ],
+      [ "Power Configuration", "index.html#autotoc_md6", null ]
     ] ],
-    [ "API Reference Manual", "index.html#autotoc_md8", null ],
-    [ "More information", "index.html#autotoc_md9", null ],
+    [ "API Reference Manual", "index.html#autotoc_md7", null ],
+    [ "More information", "index.html#autotoc_md8", null ],
     [ "BSP Overview", "md_source_bsps_mt_bsp_user_guide.html", null ],
     [ "BSP Settings", "md_bsp_settings.html", null ],
     [ "BSP API Reference", "modules.html", "modules" ]

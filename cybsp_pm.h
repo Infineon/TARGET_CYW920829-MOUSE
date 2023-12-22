@@ -1,6 +1,12 @@
 /***********************************************************************************************//**
+ * \file cybsp_pm.h
+ *
+ * \brief
+ * Basic API for setting up boards containing a Cypress MCU.
+ *
+ ***************************************************************************************************
  * \copyright
- * Copyright 2020-2022 Cypress Semiconductor Corporation (an Infineon company) or
+ * Copyright 2018-2022 Cypress Semiconductor Corporation (an Infineon company) or
  * an affiliate of Cypress Semiconductor Corporation
  *
  * SPDX-License-Identifier: Apache-2.0
@@ -18,33 +24,19 @@
  * limitations under the License.
  **************************************************************************************************/
 
-/**
- * \addtogroup group_bsp_bt Bluetooth Configuration Structure
- * \{
- * Basic configuration structure for the Bluetooth interface on this board.
- */
 #pragma once
 
-#if defined(COMPONENT_WICED_BLE)
-
-#include "cybt_platform_config.h"
+#include "cy_result.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-#if !defined(CYBSP_BT_PLATFORM_CFG_SLEEP_MODE_LP_ENABLED)
-/** If not already defined, the sleep mode LP is enabled. */
-#define CYBSP_BT_PLATFORM_CFG_SLEEP_MODE_LP_ENABLED      (1)
-#endif
-
-/** Bluetooth platform configuration settings for the board. */
-extern const cybt_platform_config_t cybsp_bt_platform_cfg;
+/**
+ * \brief Register all PM callbacks, that are expected to be registered for the used device.
+ */
+cy_rslt_t cybsp_pm_callbacks_register(void);
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
-
-#endif /* defined(COMPONENT_WICED_BLE) */
-
-/** \} group_bsp_bt */

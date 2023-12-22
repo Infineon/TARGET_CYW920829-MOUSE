@@ -1,6 +1,6 @@
 {
     "core": {
-        "version": "1.0.0.31708"
+        "version": "1.0.2.37335"
     },
     "opt": {
         "props": {
@@ -27,6 +27,7 @@
                 "rtc",
                 "sdhc",
                 "smart_io",
+                "spi",
                 "sram_64k",
                 "std_crypto",
                 "switch"
@@ -34,7 +35,7 @@
             "dependencies": {
                 "core-lib": "latest-v1.X",
                 "core-make": "latest-v3.X",
-                "mtb-hal-cat1": "release-v2.3.0-Beta1",
+                "mtb-hal-cat1": "latest-v2.X",
                 "mtb-pdl-cat1": "latest-v3.X",
                 "recipe-make-cat1b": "latest-v2.X"
             },
@@ -43,7 +44,7 @@
             "min_tools": "3.0.0",
             "template": {
                 "id": "mtb-template-cat1",
-                "version": "release-v1.0.0"
+                "version": "release-v1.2.2"
             }
         }
     }

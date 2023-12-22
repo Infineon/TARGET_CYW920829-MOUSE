@@ -23,11 +23,69 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
-#if FLASH_BOOT
+#if CY_PDL_FLASH_BOOT
 #include "cybsp_smif_init.h"
+#include "cycfg_pins.h"
+#include "cyhal_pin_package.h"
 
 cy_stc_smif_context_t cybsp_smif_context;
 
+static uint32_t SMIF_PORT_SEL0;
+static uint32_t SMIF_PORT_SEL1;
+static uint32_t SMIF_CFG;
+static uint32_t SMIF_OUT;
+
+/*******************************************************************************
+* Function Name: smif_disable
+****************************************************************************//**
+*
+* it disable the the SMIF.
+*
+* \return NULL.
+*
+*******************************************************************************/
+CY_RAMFUNC_BEGIN
+void cybsp_smif_disable()
+{
+    // to minimize DeepSleep latency this code assumes that all of the SMIF pins are on the same
+    // port
+    int port_number= CYHAL_GET_PORT(CYBSP_QSPI_SS);
+    SMIF0->CTL = SMIF0->CTL & ~SMIF_CTL_ENABLED_Msk;
+    SMIF_PORT_SEL0 = ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL0;
+    SMIF_PORT_SEL1 = ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL1;
+    SMIF_CFG = ((GPIO_PRT_Type*)&GPIO->PRT[port_number])->CFG;
+    SMIF_OUT = ((GPIO_PRT_Type*)&GPIO->PRT[port_number])->OUT;
+    ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL0 = 0x00;
+    ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL1 = 0x00;
+    ((GPIO_PRT_Type*)&GPIO->PRT[port_number])->CFG = 0x600006;
+    ((GPIO_PRT_Type*)&GPIO->PRT[port_number])->OUT = 0x1;
+}
+
+
+CY_RAMFUNC_END
+
+/*******************************************************************************
+* Function Name: smif_enable
+****************************************************************************//**
+*
+* it enable the the SMIF.
+*
+* \return NULL.
+*
+*******************************************************************************/
+CY_RAMFUNC_BEGIN
+void cybsp_smif_enable()
+{
+    int port_number= CYHAL_GET_PORT(CYBSP_QSPI_SS);
+    SMIF0->CTL = SMIF0->CTL | SMIF_CTL_ENABLED_Msk;
+    ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL0 = SMIF_PORT_SEL0;
+    ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL1 = SMIF_PORT_SEL1;
+    ((GPIO_PRT_Type*)&GPIO->PRT[port_number])->CFG = SMIF_CFG;
+    ((GPIO_PRT_Type*)&GPIO->PRT[port_number])->OUT = SMIF_OUT;
+}
+
+
+CY_RAMFUNC_END
 
 /*******************************************************************************
 * Function Name: cybsp_is_memory_ready
@@ -64,7 +122,7 @@ cy_en_smif_status_t cybsp_is_memory_ready(cy_stc_smif_mem_config_t const* memCon
         isBusy =
             Cy_SMIF_Memslot_IsBusy(SMIF_HW, (cy_stc_smif_mem_config_t*)memConfig,
                                    &cybsp_smif_context);
-        Cy_SysLib_Delay(5);
+        Cy_SysLib_DelayUs(15);
         retries++;
     } while(isBusy && (retries < MEMORY_BUSY_CHECK_RETRIES));
 
@@ -79,7 +137,7 @@ CY_PRAGMA(diag_default = Ta022)
 
 /*******************************************************************************
 * Function Name: cybsp_enable_quad_mode
-****************************************************************************//**
+****************************************************************************//*
 *
 * This function sets the QE (QUAD Enable) bit in the external memory
 * configuration register to enable Quad SPI mode.
@@ -261,38 +319,51 @@ cy_en_smif_status_t cybsp_smif_init(void)
 
     if (cybsp_smif_status == CY_SMIF_SUCCESS)
     {
-        /* Map memory device to memory map */
-        cybsp_smif_status = Cy_SMIF_Memslot_Init(SMIF_HW,
-                                                 (cy_stc_smif_block_config_t*)&smifBlockConfig,
-                                                 &cybsp_smif_context);
-        if (cybsp_smif_status == CY_SMIF_SUCCESS)
+        cybsp_smif_status = Cy_SMIF_MemCmdReleasePowerDown(SMIF0,
+                                                           smifMemConfigs[0],
+                                                           &cybsp_smif_context);
+
+        if (CY_SMIF_SUCCESS == cybsp_smif_status)
         {
-            /* Even after SFDP enumeration QE command is not initialised */
-            /* So, it should be 1.0 device */
-            if (smifMemConfigs[0]->deviceCfg->readStsRegQeCmd->command == 0)
+            cybsp_smif_status = cybsp_is_memory_ready(smifMemConfigs[0]);
+            if (CY_SMIF_SUCCESS == cybsp_smif_status)
             {
-                cybsp_smif_status = Cy_SMIF_MemInitSfdpMode(SMIF_HW,
-                                                            smifMemConfigs[0],
-                                                            CY_SMIF_WIDTH_QUAD,
-                                                            CY_SMIF_SFDP_QER_1,
-                                                            &cybsp_smif_context);
-            }
-
-            if (cybsp_smif_status == CY_SMIF_SUCCESS)
-            {
-                /* Check if Quad mode is already enabled */
-                cybsp_is_quad_enabled(smifMemConfigs[0], &QE_status);
-
-                /* If not enabled, enable quad mode */
-                if (!QE_status)
-                {
-                    /* Enable Quad mode */
-                    cybsp_smif_status = cybsp_enable_quad_mode(smifMemConfigs[0]);
-                }
+                /* Map memory device to memory map */
+                cybsp_smif_status = Cy_SMIF_Memslot_Init(SMIF_HW,
+                                                         (cy_stc_smif_block_config_t*)&smifBlockConfig,
+                                                         &cybsp_smif_context);
                 if (cybsp_smif_status == CY_SMIF_SUCCESS)
                 {
-                    /* Put the device in XIP mode */
-                    Cy_SMIF_SetMode(SMIF_HW, CY_SMIF_MEMORY);
+                    /* Even after SFDP enumeration QE command is not initialised */
+                    /* So, it should be 1.0 device */
+                    if ((smifMemConfigs[0]->deviceCfg->readStsRegQeCmd->command ==
+                         CY_SMIF_NO_COMMAND_OR_MODE) ||
+                        (smifMemConfigs[0]->deviceCfg->readStsRegQeCmd->command == 0))
+                    {
+                        cybsp_smif_status = Cy_SMIF_MemInitSfdpMode(SMIF_HW,
+                                                                    smifMemConfigs[0],
+                                                                    CY_SMIF_WIDTH_QUAD,
+                                                                    CY_SMIF_SFDP_QER_1,
+                                                                    &cybsp_smif_context);
+                    }
+
+                    if (cybsp_smif_status == CY_SMIF_SUCCESS)
+                    {
+                        /* Check if Quad mode is already enabled */
+                        cybsp_is_quad_enabled(smifMemConfigs[0], &QE_status);
+
+                        /* If not enabled, enable quad mode */
+                        if (!QE_status)
+                        {
+                            /* Enable Quad mode */
+                            cybsp_smif_status = cybsp_enable_quad_mode(smifMemConfigs[0]);
+                        }
+                        if (cybsp_smif_status == CY_SMIF_SUCCESS)
+                        {
+                            /* Put the device in XIP mode */
+                            Cy_SMIF_SetMode(SMIF_HW, CY_SMIF_MEMORY);
+                        }
+                    }
                 }
             }
         }
@@ -307,4 +378,4 @@ CY_RAMFUNC_END
 CY_PRAGMA(diag_default = Ta022)
 #endif
 
-#endif // if FLASH_BOOT
+#endif // if CY_PDL_FLASH_BOOT

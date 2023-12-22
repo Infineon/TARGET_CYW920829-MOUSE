@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration app="BACKEND" formatVersion="13" lastSavedWith="Configurator Backend" lastSavedWithVersion="3.0.0" toolsPackage="ModusToolbox 3.0.0" xmlns="http://cypress.com/xsd/cydesignfile_v4">
     <Devices>
-        <Device mpn="CYW20829A0LKML">
+        <Device mpn="CYW20829B0LKML">
             <BlockConfig>
                 <Block location="ioss[0].port[0].pin[0]">
-                    <Alias value="USER_BTN_RIGHT"/>
+                    <Alias value="CYBSP_USER_BTN_RIGHT"/>
+                    <Alias value="CYBSP_USER_BTN3"/>
                 </Block>
                 <Block location="ioss[0].port[0].pin[1]">
-                    <Alias value="USER_BTN_LEFT"/>
+                    <Alias value="CYBSP_USER_LED"/>
                 </Block>
                 <Block location="ioss[0].port[0].pin[2]">
-                    <Alias value="USER_LED1"/>
+                    <Alias value="CYBSP_USER_BTN_LEFT"/>
+                    <Alias value="CYBSP_USER_BTN"/>
+                    <Alias value="CYBSP_USER_BTN1"/>
                 </Block>
                 <Block location="ioss[0].port[0].pin[3]">
-                    <Alias value="USER_BTN_MIDDLE"/>
+                    <Alias value="CYBSP_USER_BTN_MIDDLE"/>
+                    <Alias value="CYBSP_USER_BTN2"/>
                 </Block>
                 <Block location="ioss[0].port[0].pin[4]">
-                    <Alias value="ENCODER_ZB"/>
+                    <Alias value="CYBSP_QUAD_ENC_ZB"/>
                 </Block>
                 <Block location="ioss[0].port[0].pin[5]">
-                    <Alias value="ENCODER_ZA"/>
+                    <Alias value="CYBSP_QUAD_ENC_ZA"/>
                 </Block>
                 <Block location="ioss[0].port[1].pin[0]">
                     <Alias value="CYBSP_SWO"/>
@@ -33,48 +37,49 @@
                     <Alias value="CYBSP_DEBUG_UART_TX"/>
                 </Block>
                 <Block location="ioss[0].port[2].pin[0]">
-                    <Alias value="CYBSP_SPI_CSN0"/>
+                    <Alias value="CYBSP_QSPI_SS"/>
                 </Block>
                 <Block location="ioss[0].port[2].pin[1]">
-                    <Alias value="CYBSP_SPI_SIO3"/>
+                    <Alias value="CYBSP_QSPI_D3"/>
                 </Block>
                 <Block location="ioss[0].port[2].pin[2]">
-                    <Alias value="CYBSP_SPI_SIO2"/>
+                    <Alias value="CYBSP_QSPI_D2"/>
                 </Block>
                 <Block location="ioss[0].port[2].pin[3]">
-                    <Alias value="CYBSP_SPI_MISO"/>
+                    <Alias value="CYBSP_QSPI_D1"/>
                 </Block>
                 <Block location="ioss[0].port[2].pin[4]">
-                    <Alias value="CYBSP_SPI_MOSI"/>
+                    <Alias value="CYBSP_QSPI_D0"/>
                 </Block>
                 <Block location="ioss[0].port[2].pin[5]">
-                    <Alias value="CYBSP_SPI_CLK"/>
+                    <Alias value="CYBSP_QSPI_SCK"/>
                 </Block>
                 <Block location="ioss[0].port[3].pin[0]">
-                    <Alias value="mSPI_SS"/>
+                    <Alias value="CYBSP_SPI_CS"/>
                 </Block>
                 <Block location="ioss[0].port[3].pin[1]">
-                    <Alias value="mSPI_SCLK"/>
+                    <Alias value="CYBSP_SPI_CLK"/>
                     <Alias value="CYBSP_DEBUG_UART_RTS"/>
                 </Block>
                 <Block location="ioss[0].port[3].pin[2]">
-                    <Alias value="mSPI_MOSI"/>
+                    <Alias value="CYBSP_SPI_MOSI"/>
                 </Block>
                 <Block location="ioss[0].port[3].pin[3]">
-                    <Alias value="mSPI_MISO"/>
+                    <Alias value="CYBSP_SPI_MISO"/>
                 </Block>
                 <Block location="ioss[0].port[3].pin[4]">
-                    <Alias value="PAW3212_MOTION_PIN"/>
+                    <Alias value="CYBSP_MOTION_TRIG"/>
                 </Block>
                 <Block location="ioss[0].port[3].pin[6]">
-                    <Alias value="ENCODER_COM"/>
+                    <Alias value="CYBSP_QUAD_ENC_COM"/>
                 </Block>
                 <Block location="ioss[0].port[4].pin[0]">
                     <Alias value="CYBSP_DEBUG_UART_CTS"/>
                 </Block>
                 <Block location="ioss[0].port[4].pin[1]">
-                    <Alias value="USER_BTN_DPI"/>
-                    <Alias value="PAIR_BUTTON"/>
+                    <Alias value="CYBSP_USER_BTN_DPI"/>
+                    <Alias value="CYBSP_USER_BTN_PAIR"/>
+                    <Alias value="CYBSP_USER_BTN4"/>
                 </Block>
                 <Block location="ioss[0].port[5].pin[0]">
                     <Alias value="CYBSP_XTAL1"/>
@@ -151,10 +156,7 @@
                     <Personality template="pilo" version="3.0"/>
                 </Block>
                 <Block location="srss[0].clock[0].timerclk[0]">
-                    <Personality template="timerclk" version="3.0">
-                        <Param id="sourceClock" value="imo"/>
-                        <Param id="timerDivider" value="1"/>
-                    </Personality>
+                    <Personality template="timerclk" version="3.0"/>
                 </Block>
                 <Block location="srss[0].power[0]">
                     <Personality template="power_v2" version="1.0">

@@ -44,4 +44,26 @@
  */
 cy_en_smif_status_t cybsp_smif_init(void);
 
+/**
+ * \brief Polls memory device until it is ready to receive new commands, or retry limit is exceeded
+ *
+ * \param memConfig Memory Device Configuration
+ * \returns Status of the operation.
+ * CY_SMIF_SUCCESS          - Memory is ready to accept new commands.
+ * CY_SMIF_EXCEED_TIMEOUT   - Memory is busy.
+ */
+cy_en_smif_status_t cybsp_is_memory_ready(cy_stc_smif_mem_config_t const* memConfig);
+
+/**
+ * \brief Disables the SMIF IO.
+ *
+ */
+void cybsp_smif_disable();
+
+/**
+ * \brief Enables the SMIF IO.
+ *
+ */
+void cybsp_smif_enable();
+
 #endif /*CYBSP_SMIF_INIT_H*/

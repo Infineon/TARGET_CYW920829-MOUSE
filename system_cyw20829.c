@@ -1,5 +1,5 @@
 /***************************************************************************//**
-* \file ns_system_cyw20829.c
+* \file system_cyw20829.c
 * \version 1.3
 *
 * The device system-source file.
@@ -26,8 +26,9 @@
 #include "cy_device.h"
 
 #if defined (CY_DEVICE_CYW20829)
+
 #include <stdbool.h>
-#include "system_cyw20829.h"
+#include "system_cat1b.h"
 #include "cy_syslib.h"
 #include "cy_wdt.h"
 #include "cy_sysclk.h"
@@ -177,6 +178,7 @@ uint32_t scbSHPR3StoreRestore;
 * Stores the NVIC register before Deepsleep RAM:
 *
 *******************************************************************************/
+CY_SECTION_RAMFUNC_BEGIN
 void System_Store_NVIC_Reg(void)
 {
     for (uint32_t idx = 0; idx < CY_NVIC_REG_COUNT; idx++)
@@ -191,6 +193,7 @@ void System_Store_NVIC_Reg(void)
 
     scbSHPR3StoreRestore = SCB_SHPR3_REG;
 }
+CY_SECTION_RAMFUNC_END
 
 
 /*******************************************************************************
@@ -200,6 +203,7 @@ void System_Store_NVIC_Reg(void)
 * Restores the NVIC register After Deepsleep RAM Wakeup i.e. Warmboot:
 *
 *******************************************************************************/
+CY_SECTION_RAMFUNC_BEGIN
 void System_Restore_NVIC_Reg(void)
 {
     for (uint32_t idx = 0; idx < CY_NVIC_REG_COUNT; idx++)
@@ -214,8 +218,17 @@ void System_Restore_NVIC_Reg(void)
 
     SCB_SHPR3_REG = scbSHPR3StoreRestore;
 }
+CY_SECTION_RAMFUNC_END
+
 void SystemInit(void)
 {
+
+    #ifdef CY_PDL_FLASH_BOOT
+    #if !defined (__ARMCC_VERSION)
+        bootstrapInit();
+    #endif
+    #endif
+
     SystemInit_CAT1B_CM33();
 };
 

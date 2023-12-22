@@ -3,7 +3,7 @@
 ; to pass a scatter file through a C preprocessor.
 
 /***************************************************************************//**
-* \file cyw20829_ns_flash_cbus.sct
+* \file cyw20829_ns_flash_sahb.sct
 * \version 1.1.0
 *
 * Linker file for the ARMCC compiler.
@@ -43,7 +43,7 @@
 #define flash_start_addr_cbus 0x08000000
 #define ram_start_addr_sahb 0x20000000
 #define ram_start_addr_cbus 0x04000000
-#define ram_end_addr_sahb 0x20020000
+#define ram_end_addr_sahb 0x20040000
 
 #ifndef APP_BOOTSTRAP_SIZE
 #define APP_BOOTSTRAP_SIZE 0x00002400
@@ -55,7 +55,6 @@
 ; The size of the stack section at the end of CM33 SRAM
 #define STACK_SIZE              0x00001000
 
-
 /* VMA for bootstrap Text */
 #define bootstrapText_vma ram_start_addr_cbus + ram_end_addr_sahb - ram_start_addr_sahb - BOOTSTRAP_SIZE /* 0x0401DC00 */
 /* Size of bootstrap section */
@@ -65,7 +64,7 @@
 #define bootstrapRamVect_vma ram_start_addr_sahb + STACK_SIZE /* 0x20001000 */
 
 /* VMA for flash */
-#define appText_vma flash_start_addr_cbus + BOOTSTRAP_SIZE + FLASH_ALIGNMENT_SIZE /* 0x08002600 */
+#define appText_vma flash_start_addr_cbus + BOOTSTRAP_SIZE + FLASH_ALIGNMENT_SIZE/* 0x08002600 */
 
 ; Cortex-M33 application flash area
 LR_1 bootstrapText_vma BOOTSTRAP_SIZE
@@ -75,8 +74,8 @@ LR_1 bootstrapText_vma BOOTSTRAP_SIZE
         * (RESET, +FIRST)
         * (InRoot$$Sections)
 
-        ns_start_cyw20829.o (+RO)
-        ns_system_cyw20829.o (+RO)
+        startup_cat1b_cm33.o (+RO)
+        system_cyw20829.o (+RO)
 
         /* drivers */
         cy_device.o (+RO)
@@ -87,7 +86,11 @@ LR_1 bootstrapText_vma BOOTSTRAP_SIZE
         cy_syslib*.o (+RO)
         ppu_v1.o (+RO)
         cy_mpc.o (+RO)
-        cy_pd_ppu.o (+RO)
+        cy_syspm_ppu.o (+RO)
+        *memcpy*.o (+RO)
+        *memmov*.o (+RO)
+        *memset*.o (+RO)
+        rt_mem*.o (+RO)
         *(.cy_l1func*)
     }
 
@@ -96,8 +99,8 @@ LR_1 bootstrapText_vma BOOTSTRAP_SIZE
 
     bootstrapData bootstrapData_vma ALIGN 4
     {
-        ns_start_cyw20829.o (+RW, +ZI)
-        ns_system_cyw20829.o (+RW, +ZI)
+        startup_cat1b_cm33.o (+RW, +ZI)
+        system_cyw20829.o (+RW, +ZI)
 
         /* drivers */
         cy_device.o (+RW, +ZI)
@@ -108,7 +111,8 @@ LR_1 bootstrapText_vma BOOTSTRAP_SIZE
         cy_syslib*.o (+RW, +ZI)
         ppu_v1.o (+RW, +ZI)
         cy_mpc.o (+RW, +ZI)
-        cy_pd_ppu.o (+RW, +ZI)
+        cy_syspm_ppu.o (+RW, +ZI)
+        *(.cy_l1data*)
     }
 
     bootstrap_vector bootstrapRamVect_vma UNINIT
@@ -117,7 +121,7 @@ LR_1 bootstrapText_vma BOOTSTRAP_SIZE
     }
 }
 
-#define appTextRam_vma AlignExpr(ImageLimit( bootstrap_vector), 8)
+#define appTextRam_vma AlignExpr(ImageLimit( bootstrap_vector), 16)
 
 LR_2 appText_vma
 {
@@ -129,9 +133,15 @@ LR_2 appText_vma
     appTextRam appTextRam_vma
     {
         * (.cy_ramfunc)
+        * (.text.cy_os_common)
+        * (.text.cy_btstack_common)
+        * (.text.cy_btstack_gatt)
+        * (.text.cy_ipc)
+        * (.text.cy_btstack_porting)
         cy_smif.o (+RO)
         cy_smif_memslot.o (+RO)
-    }
+        cy_smif_sfdp.o (+RO)
+     }
 
 #define appData_vma AlignExpr(ImageLimit(appTextRam), 8)
 
