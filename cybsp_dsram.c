@@ -87,10 +87,8 @@ cy_stc_syspm_warmboot_entrypoint_t syspmBspDeepSleepEntryPoint =
 //--------------------------------------------------------------------------------------------------
 __WEAK cy_rslt_t cybsp_syspm_dsram_init(void)
 {
-/* Setup DS-RAM Warmboot Re-entry. IAR is not supported */
-    #if defined(__ARMCC_VERSION) || defined (__GNUC__)
+    /* Setup DS-RAM Warmboot Re-entry */
     Cy_Syslib_SetWarmBootEntryPoint((uint32_t*)&syspmBspDeepSleepEntryPoint, true);
-    #endif
 
     return CY_RSLT_SUCCESS;
 }

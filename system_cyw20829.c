@@ -181,12 +181,12 @@ uint32_t scbSHPR3StoreRestore;
 CY_SECTION_RAMFUNC_BEGIN
 void System_Store_NVIC_Reg(void)
 {
-    for (uint32_t idx = 0; idx < CY_NVIC_REG_COUNT; idx++)
+    for (uint8_t idx = 0; idx < CY_NVIC_REG_COUNT; idx++)
     {
         nvicStoreRestore[idx] = NVIC->ISER[idx];
     }
 
-    for (uint32_t idx = 0; idx < CY_NVIC_IPR_REG_COUNT; idx++)
+    for (uint8_t idx = 0; idx < CY_NVIC_IPR_REG_COUNT; idx++)
     {
         nvicIPRStoreRestore[idx] = NVIC->IPR[idx];
     }
@@ -206,12 +206,12 @@ CY_SECTION_RAMFUNC_END
 CY_SECTION_RAMFUNC_BEGIN
 void System_Restore_NVIC_Reg(void)
 {
-    for (uint32_t idx = 0; idx < CY_NVIC_REG_COUNT; idx++)
+    for (uint8_t idx = 0; idx < CY_NVIC_REG_COUNT; idx++)
     {
         NVIC->ISER[idx] = nvicStoreRestore[idx];
     }
 
-    for (uint32_t idx = 0; idx < CY_NVIC_IPR_REG_COUNT; idx++)
+    for (uint8_t idx = 0; idx < CY_NVIC_IPR_REG_COUNT; idx++)
     {
         NVIC->IPR[idx] = nvicIPRStoreRestore[idx];
     }

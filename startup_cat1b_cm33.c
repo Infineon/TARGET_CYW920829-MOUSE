@@ -76,6 +76,8 @@ cy_israddress_cat1b __ns_vector_table_rw[VECTORTABLE_SIZE] __attribute__( ( sect
 __NO_RETURN void Reset_Handler (void);
 void SysLib_FaultHandler(uint32_t const *faultStackAddr);
 void Default_Handler(void);
+void FpuEnable_S(void);
+void FpuEnable_NS(void);
 
 void SysLib_FaultHandler(uint32_t const *faultStackAddr)
 {
@@ -90,6 +92,43 @@ void Default_Handler(void)
     while(1);
 }
 
+
+#if (!defined(__SAUREGION_PRESENT)) || (defined(__SAUREGION_PRESENT) && (__SAUREGION_PRESENT==0u)) || (defined(__SAUREGION_PRESENT) && defined(CY_PDL_TZ_ENABLED))
+/* SCB->CPACR */
+#define SCB_CPACR_CP10_CP11_ENABLE      (0xFUL << 20u)
+
+/*----------------------------------------------------------------------------
+  Enables the FPU for Secure mode
+ *----------------------------------------------------------------------------*/
+void FpuEnable_S(void)
+{
+#if defined (__FPU_USED) && (__FPU_USED == 1U)
+    uint32_t  interruptState;
+    interruptState = __get_PRIMASK();
+    __disable_irq();
+    SCB->CPACR |= SCB_CPACR_CP10_CP11_ENABLE;
+    __DSB();
+    __ISB();
+    __set_PRIMASK(interruptState);
+#endif /* (__FPU_USED) && (__FPU_USED == 1U) */
+}
+
+/*----------------------------------------------------------------------------
+  Enables the FPU for Non Secure mode
+ *----------------------------------------------------------------------------*/
+void FpuEnable_NS(void)
+{
+#if defined (__FPU_USED) && (__FPU_USED == 1U)
+    uint32_t  interruptState;
+    interruptState = __get_PRIMASK();
+    __disable_irq();
+    SCB_NS->CPACR |= SCB_CPACR_CP10_CP11_ENABLE;
+    __DSB();
+    __ISB();
+    __set_PRIMASK(interruptState);
+#endif /* (__FPU_USED) && (__FPU_USED == 1U) */
+}
+#endif
 
 /*----------------------------------------------------------------------------
   Exception / Interrupt Handler
@@ -238,6 +277,7 @@ int __low_level_init(void)
  *----------------------------------------------------------------------------*/
 __NO_RETURN void Reset_Handler(void)
 {
+#if (!defined(__SAUREGION_PRESENT)) || (defined(__SAUREGION_PRESENT) && (__SAUREGION_PRESENT==0u)) || (defined(__SAUREGION_PRESENT) && defined(CY_PDL_TZ_ENABLED))
     /* Disable I cache */
     ICACHE0->CTL = ICACHE0->CTL & (~ICACHE_CTL_CA_EN_Msk);
 
@@ -247,7 +287,12 @@ __NO_RETURN void Reset_Handler(void)
     /* Enable I cache */
     ICACHE0->CTL = ICACHE0->CTL | ICACHE_CTL_CA_EN_Msk;
 
+    /* Enable FPU */
+    FpuEnable_S();
+    FpuEnable_NS();
+#else
     __disable_irq();
+#endif
 
     for (uint32_t count = 0; count < VECTORTABLE_SIZE; count++)
     {

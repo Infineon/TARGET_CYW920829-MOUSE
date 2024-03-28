@@ -227,10 +227,7 @@ cy_en_syspm_status_t cybsp_deepsleep_ram_callback(cy_stc_syspm_callback_params_t
 
         case CY_SYSPM_AFTER_TRANSITION:
         {
-            /* Currently GCC and ARMCC supported */
-            #if defined(__GNUC__) || defined(__ARMCC_VERSION)
             Cy_Syslib_SetWarmBootEntryPoint((uint32_t*)&syspmBspDeepSleepEntryPoint, true);
-            #endif
 
             retVal = CY_SYSPM_SUCCESS;
             break;

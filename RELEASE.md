@@ -26,7 +26,7 @@ This version of the CYW920829-MOUSE BSP was validated for compatibility with the
 | :---                                      | :----:  |
 | ModusToolbox™ Software Environment        | 3.1.0   |
 | GCC Compiler                              | 11.3.1  |
-| IAR Compiler                              | 9.30.1  |
+| IAR Compiler                              | 9.40.2  |
 | ARM Compiler                              | 6.16    |
 
 Minimum required ModusToolbox™ Software Environment: v3.0.0
