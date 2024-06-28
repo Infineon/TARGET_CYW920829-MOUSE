@@ -14,8 +14,14 @@ The CYW920829-MOUSE library includes the following:
 * API documentation
 
 ### What Changed?
+#### v1.0.4
+* MPN CYW89829B01MKSBG to CYW89829B0232 update release for CYW89829
+#### v1.0.3
+* Initial production release for CYW89829
+#### v1.0.2
+* Initial production release for CYW20829
 #### v1.0.1
-* Initial production release 
+* MTB 3.0 and pre-production release 
 #### v0.5.0
 * Initial pre-production release
 

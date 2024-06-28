@@ -1,12 +1,12 @@
 {
     "core": {
-        "version": "1.0.3.39794"
+        "version": "2.0.0.41755"
     },
     "opt": {
         "props": {
             "capabilities": [
                 "ble",
-                "bsp_gen4",
+                "bsp_gen5",
                 "bt",
                 "cat1",
                 "cat1b",
