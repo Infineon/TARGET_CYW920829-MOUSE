@@ -140,12 +140,12 @@ CY_SECTION_RAMFUNC_BEGIN
 ****************************************************************************//**
 *
 * Prepares the system to work after warmboot:
-* - Intializes Vector Table
+* - Initializes Vector Table
 * - Enables all the IP's through Slave Control Registers
 * - Unfreezes the IO's
 *
 *******************************************************************************/
-void SystemInit_Warmboot_CAT1B_CM33()
+void SystemInit_Warmboot_CAT1B_CM33(void)
 {
     SCB->VTOR = (uint32_t)__ns_vector_table_rw;
     (void)Cy_SysClk_PeriGroupSetSlaveCtl(1, CY_SYSCLK_PERI_GROUP_SL_CTL2, 0x0U);
@@ -267,7 +267,7 @@ void SystemCoreClockUpdate (void)
 
     cy_Hfclk0FreqHz = SystemCoreClock;
 
-    /* Get frequency for the high-frequency clock # 2 , whcih is used for PERI PCLK*/
+    /* Get frequency for the high-frequency clock # 2 , which is used for PERI PCLK*/
     clkHfPath = CY_SYSCLK_CLK_PERI_HF_PATH_NUM;
 
     pathFreqHz = Cy_SysClk_ClkHfGetFrequency(clkHfPath);

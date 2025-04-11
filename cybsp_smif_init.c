@@ -23,7 +23,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 *******************************************************************************/
-#if CY_PDL_FLASH_BOOT
+#if (CY_PDL_FLASH_BOOT)
 #include "cybsp_smif_init.h"
 #include "cycfg_pins.h"
 #include "cyhal_pin_package.h"
@@ -34,6 +34,11 @@ static uint32_t SMIF_PORT_SEL0;
 static uint32_t SMIF_PORT_SEL1;
 static uint32_t SMIF_CFG;
 static uint32_t SMIF_OUT;
+
+static uint32_t SMIF_IP_CRYPTO_INPUT0;
+static uint32_t SMIF_IP_CRYPTO_INPUT1;
+static uint32_t SMIF_IP_CRYPTO_INPUT2;
+static uint32_t SMIF_IP_CRYPTO_INPUT3;
 
 /*******************************************************************************
 * Function Name: smif_disable
@@ -50,6 +55,18 @@ void cybsp_smif_disable()
     // to minimize DeepSleep latency this code assumes that all of the SMIF pins are on the same
     // port
     int port_number= CYHAL_GET_PORT(CYBSP_QSPI_SS);
+
+
+    /*
+     * Store the IV before to global variable before deep sleep
+     */
+    if ((((SMIF_Type*)SMIF0_BASE)->DEVICE[0].CTL)&(1<<SMIF_DEVICE_CTL_CRYPTO_EN_Pos))
+    {
+        SMIF_IP_CRYPTO_INPUT0 = SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT0;
+        SMIF_IP_CRYPTO_INPUT1 = SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT1;
+        SMIF_IP_CRYPTO_INPUT2 = SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT2;
+        SMIF_IP_CRYPTO_INPUT3 = SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT3;
+    }
     SMIF0->CTL = SMIF0->CTL & ~SMIF_CTL_ENABLED_Msk;
     SMIF_PORT_SEL0 = ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL0;
     SMIF_PORT_SEL1 = ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL1;
@@ -78,6 +95,17 @@ void cybsp_smif_enable()
 {
     int port_number= CYHAL_GET_PORT(CYBSP_QSPI_SS);
     SMIF0->CTL = SMIF0->CTL | SMIF_CTL_ENABLED_Msk;
+    /*
+     * Restore the IV before from global variable after wake up from deep sleep
+     */
+    if ((((SMIF_Type*)SMIF0_BASE)->DEVICE[0].CTL)&(1<<SMIF_DEVICE_CTL_CRYPTO_EN_Pos))
+    {
+        SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT0 = SMIF_IP_CRYPTO_INPUT0;
+        SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT1 = SMIF_IP_CRYPTO_INPUT1;
+        SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT2 = SMIF_IP_CRYPTO_INPUT2;
+        SMIF0->SMIF_CRYPTO_BLOCK[0].CRYPTO_INPUT3 = SMIF_IP_CRYPTO_INPUT3;
+    }
+
     ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL0 = SMIF_PORT_SEL0;
     ((HSIOM_PRT_Type*)&HSIOM->PRT[port_number])->PORT_SEL1 = SMIF_PORT_SEL1;
     ((GPIO_PRT_Type*)&GPIO->PRT[port_number])->CFG = SMIF_CFG;
@@ -378,4 +406,4 @@ CY_RAMFUNC_END
 CY_PRAGMA(diag_default = Ta022)
 #endif
 
-#endif // if CY_PDL_FLASH_BOOT
+#endif // if (CY_PDL_FLASH_BOOT)

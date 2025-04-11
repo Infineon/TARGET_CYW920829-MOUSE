@@ -35,6 +35,12 @@
 #include "cy_syslib.h"
 #include "cmsis_compiler.h"
 
+
+#if defined (CY_IP_M33SYSCPUSS)
+#include "cy_efuse.h"
+#endif
+
+
 /*----------------------------------------------------------------------------
   External References
  *----------------------------------------------------------------------------*/
@@ -69,11 +75,14 @@ cy_israddress_cat1b __ns_vector_table_rw[VECTORTABLE_SIZE] __attribute__( ( sect
     #error "An unsupported toolchain"
 #endif  /* (__ARMCC_VERSION) */
 
-
 /*----------------------------------------------------------------------------
   Internal References
  *----------------------------------------------------------------------------*/
+#if (defined(__ICCARM__) && defined(CY_DEVICE_PSC3))
+__NO_RETURN void __iar_program_start (void);
+#else
 __NO_RETURN void Reset_Handler (void);
+#endif
 void SysLib_FaultHandler(uint32_t const *faultStackAddr);
 void Default_Handler(void);
 void FpuEnable_S(void);
@@ -173,7 +182,7 @@ void InterruptHandler(void)
 void MemManage_Handler      (void) __attribute__ ((weak, alias("Default_Handler")));
 void BusFault_Handler       (void) __attribute__ ((weak, alias("HardFault_Handler")));
 void UsageFault_Handler     (void) __attribute__ ((weak, alias("HardFault_Handler")));
- void SVC_Handler            (void) __attribute__ ((weak, alias("HardFault_Handler")));
+void SVC_Handler            (void) __attribute__ ((weak, alias("HardFault_Handler")));
 void DebugMon_Handler       (void) __attribute__ ((weak, alias("Default_Handler")));
 void PendSV_Handler         (void) __attribute__ ((weak, alias("Default_Handler")));
 void SysTick_Handler        (void) __attribute__ ((weak, alias("Default_Handler")));
@@ -202,7 +211,11 @@ const cy_israddress __Vectors[VECTORTABLE_SIZE];
 
 const cy_israddress __Vectors[VECTORTABLE_SIZE] __VECTOR_TABLE_ATTRIBUTE  = {
   (cy_israddress)(&__INITIAL_SP),                          /*     Initial Stack Pointer */
+#if (defined(__ICCARM__) && defined(CY_DEVICE_PSC3))
+  (cy_israddress)__iar_program_start,
+#else
   (cy_israddress)Reset_Handler,                            /*     Reset Handler */
+#endif
   (cy_israddress)NMIException_Handler,                     /* -14 NMI Handler */
   (cy_israddress)HardFault_Handler,                        /* -13 Hard Fault Handler */
   (cy_israddress)MemManage_Handler,                        /* -12 MPU Fault Handler */
@@ -267,6 +280,7 @@ int __low_level_init(void);
 int __low_level_init(void)
 {
     return 0;
+
 }
 #else
 /**/
@@ -275,7 +289,11 @@ int __low_level_init(void)
 /*----------------------------------------------------------------------------
   Reset Handler called on controller reset
  *----------------------------------------------------------------------------*/
-__NO_RETURN void Reset_Handler(void)
+#if (defined(__ICCARM__) && defined(CY_DEVICE_PSC3))
+__NO_RETURN void __iar_program_start(void)
+#else
+__NO_RETURN void Reset_Handler (void)
+#endif
 {
 #if (!defined(__SAUREGION_PRESENT)) || (defined(__SAUREGION_PRESENT) && (__SAUREGION_PRESENT==0u)) || (defined(__SAUREGION_PRESENT) && defined(CY_PDL_TZ_ENABLED))
     /* Disable I cache */
@@ -323,6 +341,11 @@ __NO_RETURN void Reset_Handler(void)
 
     /* Call the constructors of all global objects */
     __iar_dynamic_initialization();
+
+    #if defined(CY_DEVICE_PSC3)
+        /* main() entry */
+        main();
+    #endif
 #endif
 
    __PROGRAM_START();

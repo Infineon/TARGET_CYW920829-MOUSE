@@ -31,7 +31,9 @@
 #include "cyhal_hwmgr.h"
 #include "cyhal_syspm.h"
 #endif
+#if ((CY_PDL_FLASH_BOOT) && (CYHAL_DRIVER_AVAILABLE_QSPI))
 #include "cybsp_smif_init.h"
+#endif
 #if defined(CY_RTOS_AWARE) || defined(COMPONENT_RTOS_AWARE)
 #include "cyabs_rtos_dsram.h"
 #endif
@@ -64,7 +66,7 @@ void cybsp_warmboot_handler(void)
 {
     SystemInit_Warmboot_CAT1B_CM33();
 
-    #if FLASH_BOOT
+    #if ((CY_PDL_FLASH_BOOT) && (CYHAL_DRIVER_AVAILABLE_QSPI))
     cybsp_smif_enable();
     cybsp_smif_init();
     #endif
@@ -85,6 +87,7 @@ cy_stc_syspm_warmboot_entrypoint_t syspmBspDeepSleepEntryPoint =
 //--------------------------------------------------------------------------------------------------
 // cybsp_syspm_dsram_init
 //--------------------------------------------------------------------------------------------------
+#if !defined(CYBSP_SKIP_PM_REGISTRATION)
 __WEAK cy_rslt_t cybsp_syspm_dsram_init(void)
 {
     /* Setup DS-RAM Warmboot Re-entry */
@@ -93,6 +96,8 @@ __WEAK cy_rslt_t cybsp_syspm_dsram_init(void)
     return CY_RSLT_SUCCESS;
 }
 
+
+#endif //#if !defined(CYBSP_SKIP_PM_REGISTRATION)
 
 #if defined(__cplusplus)
 }

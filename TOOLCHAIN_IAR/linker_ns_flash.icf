@@ -167,11 +167,11 @@ place in          CODE_region     { readonly object *cy_syslib*.o };
 place in          CODE_region     { readonly object *ppu_v1.o };
 place in          CODE_region     { readonly object *cy_mpc.o };
 place in          CODE_region     { readonly object *cy_syspm_ppu.o };
-place in          CODE_region     { readonly object *ABImemcpy*.o };
+place in          CODE_region     { readonly object *memcpy*.o };
 place in          CODE_region     { readonly object *memcmp*.o };
-place in          CODE_region     { readonly object *ABImemset*.o };
-place in          CODE_region     { readonly object *ABImemclr*.o };
-place in          CODE_region     { readonly object *ABImemmove*.o };
+place in          CODE_region     { readonly object *memset*.o };
+place in          CODE_region     { readonly object *memclr*.o };
+place in          CODE_region     { readonly object *memmove*.o };
 
 
 place in          DATA_BS_region  { readwrite object *startup_cat1b_cm33.o };
